@@ -21,13 +21,33 @@ public class JsonData {
     }
 
     public static class Item{
+        @SerializedName("volumeInfo")
+        private Info info;
+
+        public Info getInfo() {
+            return info;
+        }
+
+        public void setInfo(Info info) {
+            this.info = info;
+        }
+    }
+
+    public static class Info{
         @SerializedName("title")
         private String title;
         @SerializedName("publisher")
         private String publisher;
-        @SerializedName("imageLink")
+        @SerializedName("imageLinks")
         private ImageLink imageLink;
 
+        public ImageLink getImageLink() {
+            return imageLink;
+        }
+
+        public void setImageLink(ImageLink imageLink) {
+            this.imageLink = imageLink;
+        }
         public String getTitle() {
             return title;
         }
@@ -43,17 +63,9 @@ public class JsonData {
         public void setPublisher(String publisher) {
             this.publisher = publisher;
         }
-
-        public ImageLink getImageLink() {
-            return imageLink;
-        }
-
-        public void setImageLink(ImageLink imageLink) {
-            this.imageLink = imageLink;
-        }
     }
 
-    private static class ImageLink{
+    public static class ImageLink{
         @SerializedName("smallThumbnail")
         private String smallThumbnail;
         @SerializedName("thumbnail")

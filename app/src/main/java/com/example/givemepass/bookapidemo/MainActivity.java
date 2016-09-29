@@ -11,6 +11,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -57,22 +58,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call call, final Response response) throws IOException {
                 if(response.isSuccessful()) {
-                    JsonData jsonData = new Gson().fromJson(response.body().string(), JsonData.class);
+                    final String result = response.body().string();
+                    Gson gson = new Gson();
+                    final JsonData jsonData = gson.fromJson(result, JsonData.class);
                     dataList.addAll(jsonData.getItemList());
                     mAdapter.setData(dataList);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            try {
-                                Toast.makeText(MainActivity.this, response.body().string(), Toast.LENGTH_SHORT).show();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
                             mAdapter.notifyDataSetChanged();
                         }
                     });
-                } else{
-
                 }
             }
         });
@@ -81,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
     private void initView() {
         mListView = (ListView) findViewById(R.id.list_view);
         mAdapter = new MyAdapter(dataList);
+        mListView.setAdapter(mAdapter);
     }
 
     private class MyAdapter extends BaseAdapter{
@@ -114,14 +111,38 @@ public class MainActivity extends AppCompatActivity {
             if(view == null){
                 view = LayoutInflater.from(MainActivity.this).inflate(R.layout.adapter_item, null);
                 holder = new Holder();
+                holder.title = (TextView) view.findViewById(R.id.book_name);
+                holder.publisher = (TextView) view.findViewById(R.id.book_publisher);
+                holder.img = (ImageView) view.findViewById(R.id.book_avatar);
                 view.setTag(holder);
             } else{
                 holder = (Holder) view.getTag();
             }
             JsonData.Item item = datas.get(position);
-            holder.title.setText(item.getTitle());
-            holder.publisher.setText(item.getPublisher());
-
+            if(item != null && item.getInfo() != null) {
+                String title = item.getInfo().getTitle();
+                if(title != null) {
+                    holder.title.setText(title);
+                }
+                String publisher = item.getInfo().getPublisher();
+                if(publisher != null) {
+                    holder.publisher.setText(publisher);
+                }
+                if(item.getInfo().getImageLink() != null) {
+                    String thumbnailUrl = item.getInfo().getImageLink().getSmallThumbnail();
+                    if (thumbnailUrl == null) {
+                        thumbnailUrl = item.getInfo().getImageLink().getThumbnail();
+                    }
+                    if (thumbnailUrl != null) {
+                        Glide.with(MainActivity.this)
+                            .load(thumbnailUrl)
+                            .error(R.drawable.ic_android_black_24dp)
+                            .centerCrop()
+                            .fitCenter()
+                            .into(holder.img);
+                    }
+                }
+            }
             return view;
         }
         class Holder{

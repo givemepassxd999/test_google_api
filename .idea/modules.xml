@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/BookApiDemo.iml" filepath="$PROJECT_DIR$/BookApiDemo.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/test_google_api.iml" filepath="$PROJECT_DIR$/test_google_api.iml" />
     </modules>
   </component>
 </project>
